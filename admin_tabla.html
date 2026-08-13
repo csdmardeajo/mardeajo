@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrador de Torneo Anual - CSD Mar de Ajó</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; padding: 20px; color: #334155; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        h2 { text-align: center; color: #1e293b; margin-bottom: 5px; }
+        .sub { text-align: center; color: #64748b; font-size: 0.9rem; margin-bottom: 20px; }
+        
+        .fecha-selector { display: flex; align-items: center; justify-content: center; gap: 10px; background: #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; }
+        .fecha-selector select { font-size: 1rem; padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: bold; }
+        
+        .partido-row { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 12px; 
+            background: #ffffff; 
+            padding: 12px 18px; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .equipo-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .equipo-btn:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        .equipo-btn img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #fff;
+            padding: 2px;
+            border: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+        .equipo-btn span {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1e293b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        input[type="number"] { 
+            width: 50px; 
+            padding: 8px; 
+            text-align: center; 
+            border-radius: 8px; 
+            border: 1px solid #cbd5e1; 
+            font-weight: bold; 
+            font-size: 1.1rem;
+            color: #0f172a;
+        }
+
+        .vs-tag { font-weight: 800; color: #94a3b8; font-size: 0.85rem; }
+        .match-num { font-size: 0.85rem; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; }
+        
+        .acciones-bar { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { padding: 10px 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-add { background: #10b981; color: white; }
+        .btn-add:hover { background: #059669; }
+        .btn-save { background: #6366f1; color: white; }
+        .btn-save:hover { background: #4f46e5; }
+        .btn-remove { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 6px; }
+        .btn-remove:hover { background: #ef4444; color: white; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .modal-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .modal-header h3 { margin: 0; font-size: 1.1rem; color: #0f172a; }
+        .close-modal { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; }
+
+        .escudos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        .escudo-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 5px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            background: #f8fafc;
+        }
+        .escudo-card:hover:not(.disabled) {
+            border-color: #2563eb;
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+        .escudo-card img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            margin-bottom: 6px;
+        }
+        .escudo-card span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #334155;
+            line-height: 1.1;
+        }
+
+        .escudo-card.disabled {
+            opacity: 0.35;
+            filter: grayscale(100%);
+            cursor: not-allowed;
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .status-msg { text-align: center; font-size: 0.9rem; font-weight: bold; margin-top: 15px; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Control de Resultados por Fecha</h2>
+    <p class="sub">Sincronizado automáticamente con csdmardeajo.com.ar</p>
+
+    <div class="fecha-selector">
+        <label for="selectFecha"><b>Seleccionar Fecha:</b></label>
+        <select id="selectFecha" onchange="cambiarFecha(this.value)"></select>
+    </div>
+
+    <div id="contenedorPartidos"></div>
+
+    <div class="acciones-bar" id="barraAcciones">
+        <button class="btn btn-add" onclick="agregarPartido()">+ Agregar Partido</button>
+        <button class="btn btn-save" onclick="guardarFechaActual(true)">💾 Guardar y Publicar en Web</button>
+    </div>
+    <div id="msgStatus" class="status-msg"></div>
+</div>
+
+<div class="modal-overlay" id="modalSelector">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 id="modalTitle">Seleccionar Equipo</h3>
+            <button class="close-modal" onclick="cerrarModal()">✕</button>
+        </div>
+        <div class="escudos-grid" id="gridEscudos"></div>
+    </div>
+</div>
+
+<script>
+    const API_ENDPOINT = 'https://csdmardeajo.com.ar/guardar_torneo.php';
+    const DATA_ENDPOINT = 'https://csdmardeajo.com.ar/torneo_data.json';
+    const placeholderEscudo = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%2F%3E%3C%2Fsvg%3E";
+
+    const equiposBase = [
+        { id: "ALLBOYS", nombre: "ALL BOYS", escudo: "IMAGENES/escudos/allboys.png" },
+        { id: "CAJU", nombre: "C.A.J.U", escudo: "IMAGENES/escudos/caju.png" },
+        { id: "COSME", nombre: "COSME ARGERICH", escudo: "IMAGENES/escudos/cosme.png" },
+        { id: "VILLA", nombre: "DEF. DE VILLA CLELIA", escudo: "IMAGENES/escudos/villa.png" },
+        { id: "CADU", nombre: "DEFENSORES UNIDOS", escudo: "IMAGENES/escudos/cadu.png" },
+        { id: "PORVENIR", nombre: "EL GRAN PORVENIR", escudo: "IMAGENES/escudos/porvenir.png" },
+        { id: "FOMENTO", nombre: "FTO. SAN BERNARDO", escudo: "IMAGENES/escudos/fomento.png" },
+        { id: "QUINTAS", nombre: "LAS QUINTAS", escudo: "IMAGENES/escudos/lasquintas.png" },
+        { id: "NUCLEO", nombre: "NUCLEO FC", escudo: "IMAGENES/escudos/nucleo.png" },
+        { id: "LAVALLE", nombre: "POPULAR LAVALLE", escudo: "IMAGENES/escudos/lavalle.png" },
+        { id: "TONINAS", nombre: "SOC. LAS TONINAS", escudo: "IMAGENES/escudos/lastoninas.png" },
+        { id: "SOCIAL", nombre: "SOC. MAR DE AJO", escudo: "IMAGENES/escudos/social.png" },
+        { id: "TUYU", nombre: "SOC. MAR DEL TUYU", escudo: "IMAGENES/escudos/mardeltuyu.png" },
+        { id: "SANTA", nombre: "SOC. SANTA TERESITA", escudo: "IMAGENES/escudos/santa.png" }
+    ];
+
+    let fechaActualNum = 0;
+    let torneoData = {};
+    let partidoActivoContexto = { idMatch: null, rol: null };
+
+    // Cargar datos remotos desde el servidor
+    async function cargarDatosRemotos() {
+        try {
+            const response = await fetch(DATA_ENDPOINT + '?v=' + Date.now());
+            if (response.ok) {
+                torneoData = await response.json();
+            }
+        } catch (e) {
+            console.warn("No se encontraron datos remotos previa carga. Usando backup local.", e);
+            torneoData = JSON.parse(localStorage.getItem('torneo_anual_db')) || {};
+        }
+        initFechas();
+    }
+
+    function obtenerEquipo(id) {
+        return equiposBase.find(e => e.id === id);
+    }
+
+    function initFechas() {
+        const select = document.getElementById('selectFecha');
+        select.innerHTML = '';
+        select.innerHTML += `<option value="0">Fecha 0 (Estado Inicial)</option>`;
+        if (!torneoData[0]) torneoData[0] = [];
+
+        for (let i = 1; i <= 13; i++) {
+            select.innerHTML += `<option value="${i}">Fecha ${i}</option>`;
+            if (!torneoData[i]) torneoData[i] = [];
+        }
+        cargarFecha(0);
+    }
+
+    function cambiarFecha(nuevaFecha) {
+        guardarFechaActual(false);
+        fechaActualNum = parseInt(nuevaFecha);
+        cargarFecha(fechaActualNum);
+    }
+
+    function cargarFecha(num) {
+        if (!torneoData[num]) torneoData[num] = [];
+        const barra = document.getElementById('barraAcciones');
+        barra.style.display = (num === 0) ? 'none' : 'flex';
+        renderPartidos();
+    }
+
+    function agregarPartido() {
+        const idMatch = Date.now();
+        torneoData[fechaActualNum].push({ id: idMatch, local: "", visitante: "", gl: 0, gv: 0 });
+        renderPartidos();
+    }
+
+    function eliminarPartido(idMatch) {
+        torneoData[fechaActualNum] = torneoData[fechaActualNum].filter(p => p.id !== idMatch);
+        renderPartidos();
+    }
+
+    function obtenerEquiposOcupadosEnFechaActual(idMatchActual) {
+        let ocupados = [];
+        torneoData[fechaActualNum].forEach(p => {
+            if (p.id !== idMatchActual) {
+                if (p.local) ocupados.push(p.local);
+                if (p.visitante) ocupados.push(p.visitante);
+            }
+        });
+        return ocupados;
+    }
+
+    function renderPartidos() {
+        const div = document.getElementById('contenedorPartidos');
+        div.innerHTML = '';
+
+        if (fechaActualNum === 0) {
+            div.innerHTML = `<p style="text-align:center; color:#64748b; padding: 20px; background:#f1f5f9; border-radius:8px;">
+                <b>Fecha 0 Seleccionada:</b> Estado inicial del torneo. Seleccioná una fecha superior para empezar a cargar partidos.
+            </p>`;
+            return;
+        }
+
+        const partidos = torneoData[fechaActualNum];
+        if (partidos.length === 0) {
+            div.innerHTML = `<p style="text-align:center; color:#94a3b8; padding: 20px;">No hay partidos cargados en la Fecha ${fechaActualNum}. Hacé clic en "+ Agregar Partido".</p>`;
+            return;
+        }
+
+        partidos.forEach((p, idx) => {
+            const eqLocal = obtenerEquipo(p.local);
+            const eqVisita = obtenerEquipo(p.visitante);
+
+            div.innerHTML += `
+                <div class="partido-row">
+                    <span class="match-num"><b>P${idx + 1}</b></span>
+                    
+                    <button class="equipo-btn" onclick="abrirModalSelector(${p.id}, 'local')">
+                        <img src="${eqLocal ? eqLocal.escudo : placeholderEscudo}" alt="">
+                        <span>${eqLocal ? eqLocal.nombre : '-- Seleccionar Local --'}</span>
+                    </button>
+
+                    <input type="number" min="0" value="${p.gl}" onchange="actualizarGoles(${p.id}, 'gl', this.value)">
+                    <span class="vs-tag">vs</span>
+                    <input type="number" min="0" value="${p.gv}" onchange="actualizarGoles(${p.id}, 'gv', this.value)">
+                    
+                    <button class="equipo-btn" onclick="abrirModalSelector(${p.id}, 'visitante')">
+                        <img src="${eqVisita ? eqVisita.escudo : placeholderEscudo}" alt="">
+                        <span>${eqVisita ? eqVisita.nombre : '-- Seleccionar Visitante --'}</span>
+                    </button>
+
+                    <button class="btn btn-remove" onclick="eliminarPartido(${p.id})">✕</button>
+                </div>
+            `;
+        });
+    }
+
+    function abrirModalSelector(idMatch, rol) {
+        partidoActivoContexto = { idMatch, rol };
+        const p = torneoData[fechaActualNum].find(item => item.id === idMatch);
+        const ocupados = obtenerEquiposOcupadosEnFechaActual(idMatch);
+        const idRival = rol === 'local' ? p.visitante : p.local;
+
+        const grid = document.getElementById('gridEscudos');
+        grid.innerHTML = '';
+        document.getElementById('modalTitle').innerText = `Seleccionar ${rol.toUpperCase()}`;
+
+        equiposBase.forEach(eq => {
+            const estaDeshabilitado = ocupados.includes(eq.id) || eq.id === idRival;
+            const claseDisabled = estaDeshabilitado ? 'disabled' : '';
+            const accionClick = estaDeshabilitado ? '' : `onclick="seleccionarEquipoDesdeModal('${eq.id}')"`;
+
+            grid.innerHTML += `
+                <div class="escudo-card ${claseDisabled}" ${accionClick}>
+                    <img src="${eq.escudo}" alt="${eq.nombre}">
+                    <span>${eq.nombre}</span>
+                </div>
+            `;
+        });
+
+        document.getElementById('modalSelector').style.display = 'flex';
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalSelector').style.display = 'none';
+    }
+
+    function seleccionarEquipoDesdeModal(idEquipo) {
+        const { idMatch, rol } = partidoActivoContexto;
+        const p = torneoData[fechaActualNum].find(item => item.id === idMatch);
+        if (p) p[rol] = idEquipo;
+        cerrarModal();
+        guardarFechaActual(false);
+        renderPartidos();
+    }
+
+    function actualizarGoles(idMatch, campo, valor) {
+        const p = torneoData[fechaActualNum].find(item => item.id === idMatch);
+        if (p) p[campo] = parseInt(valor) || 0;
+        guardarFechaActual(false);
+    }
+
+    // Sincronización remota al backend
+    async function guardarFechaActual(mostrarMensaje = true) {
+        localStorage.setItem('torneo_anual_db', JSON.stringify(torneoData));
+        const msg = document.getElementById('msgStatus');
+
+        if (mostrarMensaje) {
+            msg.style.color = "#6366f1";
+            msg.innerText = "⏳ Guardando y publicando en csdmardeajo.com.ar...";
+        }
+
+        try {
+            const res = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(torneoData)
+            });
+
+            if (res.ok && mostrarMensaje) {
+                msg.style.color = "#10b981";
+                msg.innerText = `¡Éxito! Fecha ${fechaActualNum} publicada correctamente en la web.`;
+                setTimeout(() => { msg.innerText = ''; }, 3000);
+            }
+        } catch (err) {
+            console.error(err);
+            if (mostrarMensaje) {
+                msg.style.color = "#ef4444";
+                msg.innerText = " Error al conectar con el servidor principal. Se guardó localmente.";
+            }
+        }
+    }
+
+    // Arrancar la app cargando los datos reales
+    cargarDatosRemotos();
+</script>
+
+</body>
+</html>
