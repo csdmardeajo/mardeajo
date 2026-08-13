@@ -2,190 +2,419 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Administrador de Torneo Anual - CSD Mar de Ajó</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel de Control - CSD Mar de Ajó</title>
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; padding: 20px; color: #334155; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        h2 { text-align: center; color: #1e293b; margin-bottom: 5px; }
-        .sub { text-align: center; color: #64748b; font-size: 0.9rem; margin-bottom: 20px; }
-        
-        .fecha-selector { display: flex; align-items: center; justify-content: center; gap: 10px; background: #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; }
-        .fecha-selector select { font-size: 1rem; padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: bold; }
-        
-        .partido-row { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            gap: 12px; 
-            background: #ffffff; 
-            padding: 12px 18px; 
-            border-radius: 12px; 
-            margin-bottom: 12px; 
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        :root {
+            --bg-principal: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --accent-blue: #2563eb;
+            --accent-gold: #f59e0b;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
         }
 
-        .equipo-btn {
-            flex: 1;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--text-light);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Encabezado Deportivo */
+        .header {
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-light);
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .header h1 span {
+            color: var(--accent-gold);
+        }
+
+        .header p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Selector de Fechas */
+        .fecha-selector-wrapper {
+            background: rgba(15, 23, 42, 0.6);
             padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .fecha-selector-wrapper label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .fecha-selector-wrapper select {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
             border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            outline: none;
             cursor: pointer;
-            transition: all 0.2s;
+        }
+
+        /* Contenedor de Partidos */
+        #contenedorPartidos {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .partido-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        .partido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 6px;
+        }
+
+        .match-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Botón de selección de equipo */
+        .equipo-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            width: 100%;
+            min-height: 48px;
             text-align: left;
+            transition: all 0.2s;
         }
-        .equipo-btn:hover {
-            border-color: #3b82f6;
-            background: #eff6ff;
+
+        .equipo-btn:active {
+            transform: scale(0.97);
+            border-color: var(--accent-blue);
         }
+
         .equipo-btn img {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             object-fit: contain;
-            border-radius: 50%;
-            background: #fff;
-            padding: 2px;
-            border: 1px solid #e2e8f0;
             flex-shrink: 0;
         }
+
         .equipo-btn span {
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #1e293b;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-light);
+            line-height: 1.1;
+            white-space: normal;
+            word-break: break-word;
         }
 
-        input[type="number"] { 
-            width: 50px; 
-            padding: 8px; 
-            text-align: center; 
-            border-radius: 8px; 
-            border: 1px solid #cbd5e1; 
-            font-weight: bold; 
+        /* Marcador inputs */
+        .score-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--bg-principal);
+            padding: 4px 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .score-box input[type="number"] {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--accent-gold);
             font-size: 1.1rem;
-            color: #0f172a;
+            font-weight: 800;
+            text-align: center;
+            outline: none;
         }
 
-        .vs-tag { font-weight: 800; color: #94a3b8; font-size: 0.85rem; }
-        .match-num { font-size: 0.85rem; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; }
-        
-        .acciones-bar { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { padding: 10px 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .btn-add { background: #10b981; color: white; }
-        .btn-add:hover { background: #059669; }
-        .btn-save { background: #6366f1; color: white; }
-        .btn-save:hover { background: #4f46e5; }
-        .btn-remove { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 6px; }
-        .btn-remove:hover { background: #ef4444; color: white; }
+        .score-box .vs {
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: var(--text-muted);
+        }
 
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Barra de Acciones Fija o Integrada */
+        .acciones-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-add {
+            background: transparent;
+            color: var(--accent-green);
+            border: 1px dashed var(--accent-green);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .status-msg {
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            min-height: 20px;
+            padding: 4px;
+            border-radius: 6px;
+        }
+
+        /* MODAL RESPONSIVE */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
             display: none;
             justify-content: center;
-            align-items: center;
-            z-index: 999;
+            align-items: flex-end;
+            z-index: 9999;
         }
+
+        @media (min-width: 600px) {
+            .modal-overlay {
+                align-items: center;
+                padding: 20px;
+            }
+        }
+
         .modal-card {
-            background: white;
+            background: var(--bg-card);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
             padding: 20px;
-            border-radius: 16px;
+            width: 100%;
             max-width: 500px;
-            width: 90%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border: 1px solid var(--border-color);
         }
+
+        @media (min-width: 600px) {
+            .modal-card {
+                border-radius: 20px;
+            }
+        }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
         }
-        .modal-header h3 { margin: 0; font-size: 1.1rem; color: #0f172a; }
-        .close-modal { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
 
         .escudos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 12px;
-            max-height: 380px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
             overflow-y: auto;
-            padding: 5px;
+            padding-right: 4px;
         }
+
+        @media (min-width: 400px) {
+            .escudos-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         .escudo-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px 5px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            gap: 6px;
             cursor: pointer;
-            transition: all 0.2s;
             text-align: center;
-            background: #f8fafc;
         }
-        .escudo-card:hover:not(.disabled) {
-            border-color: #2563eb;
-            background: #eff6ff;
-            transform: translateY(-2px);
+
+        .escudo-card:active:not(.disabled) {
+            border-color: var(--accent-blue);
+            background: var(--bg-input);
         }
+
         .escudo-card img {
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             object-fit: contain;
-            margin-bottom: 6px;
         }
+
         .escudo-card span {
-            font-size: 0.75rem;
+            font-size: 0.68rem;
             font-weight: 700;
-            color: #334155;
+            color: var(--text-light);
             line-height: 1.1;
         }
 
         .escudo-card.disabled {
-            opacity: 0.35;
+            opacity: 0.2;
             filter: grayscale(100%);
             cursor: not-allowed;
-            background: #e2e8f0;
-            border-color: #cbd5e1;
         }
-
-        .status-msg { text-align: center; font-size: 0.9rem; font-weight: bold; margin-top: 15px; min-height: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Control de Resultados por Fecha</h2>
-    <p class="sub">Sincronizado automáticamente con csdmardeajo.com.ar</p>
+    <div class="header">
+        <h1>CSD <span>MAR DE AJÓ</span></h1>
+        <p>Panel Oficial de Control de Posiciones</p>
+    </div>
 
-    <div class="fecha-selector">
-        <label for="selectFecha"><b>Seleccionar Fecha:</b></label>
+    <div class="fecha-selector-wrapper">
+        <label for="selectFecha">Jornada:</label>
         <select id="selectFecha" onchange="cambiarFecha(this.value)"></select>
     </div>
 
     <div id="contenedorPartidos"></div>
 
     <div class="acciones-bar" id="barraAcciones">
-        <button class="btn btn-add" onclick="agregarPartido()">+ Agregar Partido</button>
-        <button class="btn btn-save" onclick="guardarFechaActual(true)">💾 Guardar y Publicar en Web</button>
+        <button class="btn btn-add" onclick="agregarPartido()">+ Añadir Enfrentamiento</button>
+        <button class="btn btn-save" onclick="guardarFechaActual(true)">💾 Publicar en Sitio Web</button>
     </div>
+
     <div id="msgStatus" class="status-msg"></div>
 </div>
 
+<!-- Modal Selección de Equipos -->
 <div class="modal-overlay" id="modalSelector">
     <div class="modal-card">
         <div class="modal-header">
-            <h3 id="modalTitle">Seleccionar Equipo</h3>
+            <h3 id="modalTitle">Seleccionar Club</h3>
             <button class="close-modal" onclick="cerrarModal()">✕</button>
         </div>
         <div class="escudos-grid" id="gridEscudos"></div>
@@ -195,30 +424,30 @@
 <script>
     const API_ENDPOINT = 'https://csdmardeajo.com.ar/guardar_torneo.php';
     const DATA_ENDPOINT = 'https://csdmardeajo.com.ar/torneo_data.json';
-    const placeholderEscudo = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%2F%3E%3C%2Fsvg%3E";
+    const placeholderEscudo = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%2F%3E%3C%2Fsvg%3E";
 
+    // Rutas corregidas apuntando a la nueva carpeta /escudos/ subida al repositorio
     const equiposBase = [
-        { id: "ALLBOYS", nombre: "ALL BOYS", escudo: "IMAGENES/escudos/allboys.png" },
-        { id: "CAJU", nombre: "C.A.J.U", escudo: "IMAGENES/escudos/caju.png" },
-        { id: "COSME", nombre: "COSME ARGERICH", escudo: "IMAGENES/escudos/cosme.png" },
-        { id: "VILLA", nombre: "DEF. DE VILLA CLELIA", escudo: "IMAGENES/escudos/villa.png" },
-        { id: "CADU", nombre: "DEFENSORES UNIDOS", escudo: "IMAGENES/escudos/cadu.png" },
-        { id: "PORVENIR", nombre: "EL GRAN PORVENIR", escudo: "IMAGENES/escudos/porvenir.png" },
-        { id: "FOMENTO", nombre: "FTO. SAN BERNARDO", escudo: "IMAGENES/escudos/fomento.png" },
-        { id: "QUINTAS", nombre: "LAS QUINTAS", escudo: "IMAGENES/escudos/lasquintas.png" },
-        { id: "NUCLEO", nombre: "NUCLEO FC", escudo: "IMAGENES/escudos/nucleo.png" },
-        { id: "LAVALLE", nombre: "POPULAR LAVALLE", escudo: "IMAGENES/escudos/lavalle.png" },
-        { id: "TONINAS", nombre: "SOC. LAS TONINAS", escudo: "IMAGENES/escudos/lastoninas.png" },
-        { id: "SOCIAL", nombre: "SOC. MAR DE AJO", escudo: "IMAGENES/escudos/social.png" },
-        { id: "TUYU", nombre: "SOC. MAR DEL TUYU", escudo: "IMAGENES/escudos/mardeltuyu.png" },
-        { id: "SANTA", nombre: "SOC. SANTA TERESITA", escudo: "IMAGENES/escudos/santa.png" }
+        { id: "ALLBOYS", nombre: "ALL BOYS", escudo: "escudos/allboys.png" },
+        { id: "CAJU", nombre: "C.A.J.U", escudo: "escudos/caju.png" },
+        { id: "COSME", nombre: "COSME ARGERICH", escudo: "escudos/cosme.png" },
+        { id: "VILLA", nombre: "DEF. VILLA CLELIA", escudo: "escudos/villa.png" },
+        { id: "CADU", nombre: "DEFENSORES UNIDOS", escudo: "escudos/cadu.png" },
+        { id: "PORVENIR", nombre: "GRAN PORVENIR", escudo: "escudos/porvenir.png" },
+        { id: "FOMENTO", nombre: "FTO. SAN BERNARDO", escudo: "escudos/fomento.png" },
+        { id: "QUINTAS", nombre: "LAS QUINTAS", escudo: "escudos/lasquintas.png" },
+        { id: "NUCLEO", nombre: "NUCLEO FC", escudo: "escudos/nucleo.png" },
+        { id: "LAVALLE", nombre: "POPULAR LAVALLE", escudo: "escudos/lavalle.png" },
+        { id: "TONINAS", nombre: "SOC. LAS TONINAS", escudo: "escudos/lastoninas.png" },
+        { id: "SOCIAL", nombre: "SOC. MAR DE AJO", escudo: "escudos/social.png" },
+        { id: "TUYU", nombre: "SOC. MAR DEL TUYU", escudo: "escudos/mardeltuyu.png" },
+        { id: "SANTA", nombre: "SOC. SANTA TERESITA", escudo: "escudos/santa.png" }
     ];
 
     let fechaActualNum = 0;
     let torneoData = {};
     let partidoActivoContexto = { idMatch: null, rol: null };
 
-    // Cargar datos remotos desde el servidor
     async function cargarDatosRemotos() {
         try {
             const response = await fetch(DATA_ENDPOINT + '?v=' + Date.now());
@@ -226,7 +455,6 @@
                 torneoData = await response.json();
             }
         } catch (e) {
-            console.warn("No se encontraron datos remotos previa carga. Usando backup local.", e);
             torneoData = JSON.parse(localStorage.getItem('torneo_anual_db')) || {};
         }
         initFechas();
@@ -239,7 +467,7 @@
     function initFechas() {
         const select = document.getElementById('selectFecha');
         select.innerHTML = '';
-        select.innerHTML += `<option value="0">Fecha 0 (Estado Inicial)</option>`;
+        select.innerHTML += `<option value="0">Fecha 0 (Inicial)</option>`;
         if (!torneoData[0]) torneoData[0] = [];
 
         for (let i = 1; i <= 13; i++) {
@@ -289,15 +517,15 @@
         div.innerHTML = '';
 
         if (fechaActualNum === 0) {
-            div.innerHTML = `<p style="text-align:center; color:#64748b; padding: 20px; background:#f1f5f9; border-radius:8px;">
-                <b>Fecha 0 Seleccionada:</b> Estado inicial del torneo. Seleccioná una fecha superior para empezar a cargar partidos.
+            div.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding: 30px 10px; font-size:0.85rem;">
+                <b>Fecha 0 Seleccionada:</b> La tabla pública muestra las posiciones iniciales. Elegí una Fecha superior para cargar partidos.
             </p>`;
             return;
         }
 
         const partidos = torneoData[fechaActualNum];
         if (partidos.length === 0) {
-            div.innerHTML = `<p style="text-align:center; color:#94a3b8; padding: 20px;">No hay partidos cargados en la Fecha ${fechaActualNum}. Hacé clic en "+ Agregar Partido".</p>`;
+            div.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding: 30px 10px; font-size:0.85rem;">No hay partidos en la Fecha ${fechaActualNum}. Tocá en "+ Añadir Enfrentamiento".</p>`;
             return;
         }
 
@@ -306,24 +534,28 @@
             const eqVisita = obtenerEquipo(p.visitante);
 
             div.innerHTML += `
-                <div class="partido-row">
-                    <span class="match-num"><b>P${idx + 1}</b></span>
-                    
-                    <button class="equipo-btn" onclick="abrirModalSelector(${p.id}, 'local')">
-                        <img src="${eqLocal ? eqLocal.escudo : placeholderEscudo}" alt="">
-                        <span>${eqLocal ? eqLocal.nombre : '-- Seleccionar Local --'}</span>
-                    </button>
+                <div class="partido-card">
+                    <div class="partido-header">
+                        <span>PARTIDO ${idx + 1}</span>
+                        <button class="btn-delete" onclick="eliminarPartido(${p.id})">✕</button>
+                    </div>
+                    <div class="match-row">
+                        <button class="equipo-btn" onclick="abrirModalSelector(${p.id}, 'local')">
+                            <img src="${eqLocal ? eqLocal.escudo : placeholderEscudo}" alt="">
+                            <span>${eqLocal ? eqLocal.nombre : 'Elegir Local'}</span>
+                        </button>
 
-                    <input type="number" min="0" value="${p.gl}" onchange="actualizarGoles(${p.id}, 'gl', this.value)">
-                    <span class="vs-tag">vs</span>
-                    <input type="number" min="0" value="${p.gv}" onchange="actualizarGoles(${p.id}, 'gv', this.value)">
-                    
-                    <button class="equipo-btn" onclick="abrirModalSelector(${p.id}, 'visitante')">
-                        <img src="${eqVisita ? eqVisita.escudo : placeholderEscudo}" alt="">
-                        <span>${eqVisita ? eqVisita.nombre : '-- Seleccionar Visitante --'}</span>
-                    </button>
+                        <div class="score-box">
+                            <input type="number" pattern="[0-9]*" inputmode="numeric" min="0" value="${p.gl}" onchange="actualizarGoles(${p.id}, 'gl', this.value)">
+                            <span class="vs">:</span>
+                            <input type="number" pattern="[0-9]*" inputmode="numeric" min="0" value="${p.gv}" onchange="actualizarGoles(${p.id}, 'gv', this.value)">
+                        </div>
 
-                    <button class="btn btn-remove" onclick="eliminarPartido(${p.id})">✕</button>
+                        <button class="equipo-btn" onclick="abrirModalSelector(${p.id}, 'visitante')">
+                            <img src="${eqVisita ? eqVisita.escudo : placeholderEscudo}" alt="">
+                            <span>${eqVisita ? eqVisita.nombre : 'Elegir Visitante'}</span>
+                        </button>
+                    </div>
                 </div>
             `;
         });
@@ -337,7 +569,7 @@
 
         const grid = document.getElementById('gridEscudos');
         grid.innerHTML = '';
-        document.getElementById('modalTitle').innerText = `Seleccionar ${rol.toUpperCase()}`;
+        document.getElementById('modalTitle').innerText = `Elegir ${rol.toUpperCase()}`;
 
         equiposBase.forEach(eq => {
             const estaDeshabilitado = ocupados.includes(eq.id) || eq.id === idRival;
@@ -374,14 +606,13 @@
         guardarFechaActual(false);
     }
 
-    // Sincronización remota al backend
     async function guardarFechaActual(mostrarMensaje = true) {
         localStorage.setItem('torneo_anual_db', JSON.stringify(torneoData));
         const msg = document.getElementById('msgStatus');
 
         if (mostrarMensaje) {
-            msg.style.color = "#6366f1";
-            msg.innerText = "⏳ Guardando y publicando en csdmardeajo.com.ar...";
+            msg.style.color = "var(--accent-gold)";
+            msg.innerText = "⏳ Sincronizando con el servidor...";
         }
 
         try {
@@ -392,20 +623,18 @@
             });
 
             if (res.ok && mostrarMensaje) {
-                msg.style.color = "#10b981";
-                msg.innerText = `¡Éxito! Fecha ${fechaActualNum} publicada correctamente en la web.`;
+                msg.style.color = "var(--accent-green)";
+                msg.innerText = `¡Fecha ${fechaActualNum} publicada en el sitio oficial!`;
                 setTimeout(() => { msg.innerText = ''; }, 3000);
             }
         } catch (err) {
-            console.error(err);
             if (mostrarMensaje) {
-                msg.style.color = "#ef4444";
-                msg.innerText = " Error al conectar con el servidor principal. Se guardó localmente.";
+                msg.style.color = "var(--accent-red)";
+                msg.innerText = "Error de conexión. Se guardó copia en el teléfono.";
             }
         }
     }
 
-    // Arrancar la app cargando los datos reales
     cargarDatosRemotos();
 </script>
 
