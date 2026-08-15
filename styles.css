@@ -1,12 +1,12 @@
-/* ESTILOS ESTACIÓN FÚTBOL - TEMA DEPORTIVO NEÓN PREMIUM */
+/* ESTILOS ESTACIÓN FÚTBOL - MÓVIL FIRST SIN SCROLL HORIZONTAL */
 :root {
-    --bg-main: #0B0F17;            /* Fondo ultra oscuro */
-    --bg-card: #151C28;            /* Tarjetas azul/gris oscuro */
+    --bg-main: #0B0F17;            
+    --bg-card: #151C28;            
     --navy-dark: #0F172A;
     --navy-medium: #1E293B;
-    --green-neon: #10B981;          /* Verde césped luminoso */
+    --green-neon: #10B981;          
     --green-neon-glow: rgba(16, 185, 129, 0.25);
-    --blue-accent: #3B82F6;         /* Azul eléctrico */
+    --blue-accent: #3B82F6;         
     --blue-glow: rgba(59, 130, 246, 0.3);
     --white: #FFFFFF;
     --text-dark: #F8FAFC;
@@ -23,32 +23,24 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-html {
+html, body {
     width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    -webkit-text-size-adjust: 100%;
-}
-
-body {
+    margin: 0;
+    padding: 0;
     background-color: var(--bg-main);
     background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0b0f17 75%);
     color: var(--text-dark);
     line-height: 1.5;
     padding-bottom: 40px;
     min-height: 100vh;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    position: relative;
+    overflow-x: hidden; /* Garantiza 0 movimiento lateral */
 }
 
 .container {
     width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 16px;
-    box-sizing: border-box;
+    padding: 0 12px;
 }
 
 /* NAVBAR Y LOGO */
@@ -56,7 +48,7 @@ body {
     background: rgba(21, 28, 40, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    padding: 12px 24px;
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -67,8 +59,6 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 .logo-container {
@@ -77,15 +67,9 @@ body {
 }
 
 .navbar-logo-img {
-    height: 48px;
+    height: 40px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.15));
-    transition: transform 0.2s ease;
-}
-
-.navbar-logo-img:hover {
-    transform: scale(1.03);
 }
 
 .status-indicator {
@@ -93,9 +77,9 @@ body {
     align-items: center;
     gap: 8px;
     background: rgba(16, 185, 129, 0.1);
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--green-neon);
     border: 1px solid rgba(16, 185, 129, 0.3);
@@ -111,14 +95,13 @@ body {
 
 /* SECCIÓN CANCHAS */
 .section-canchas {
-    margin: 24px 0;
+    margin: 20px 0;
 }
 
 .section-header h2 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: var(--text-dark);
     font-weight: 800;
-    letter-spacing: -0.5px;
 }
 
 .sub-text {
@@ -129,25 +112,16 @@ body {
 .canchas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    gap: 16px;
     margin-top: 12px;
-    width: 100%;
 }
 
 .cancha-card {
     background: var(--bg-card);
     border-radius: 16px;
-    padding: 18px;
+    padding: 16px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: var(--shadow);
-    transition: all 0.25s ease;
-    min-width: 0; /* Corrección iOS */
-}
-
-.cancha-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--blue-accent);
-    box-shadow: 0 12px 20px -5px var(--blue-glow);
 }
 
 .cancha-header {
@@ -158,7 +132,7 @@ body {
 }
 
 .cancha-header h3 {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: var(--text-dark);
     font-weight: 700;
 }
@@ -166,7 +140,7 @@ body {
 .badge-type {
     background: rgba(59, 130, 246, 0.15);
     color: var(--blue-accent);
-    padding: 4px 12px;
+    padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 800;
@@ -179,9 +153,8 @@ body {
     border: 1px solid rgba(245, 158, 11, 0.4);
 }
 
-/* Diagrama Sintético */
 .field-diagram {
-    height: 100px;
+    height: 90px;
     background: linear-gradient(180deg, #064E3B 0%, #022C22 100%);
     border-radius: 10px;
     position: relative;
@@ -203,33 +176,32 @@ body {
 }
 
 .center-circle {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 
 .penalty-area-left {
     left: 0;
-    width: 20px;
-    height: 50px;
+    width: 18px;
+    height: 45px;
     border-left: none;
 }
 
 .penalty-area-right {
     right: 0;
-    width: 20px;
-    height: 50px;
+    width: 18px;
+    height: 45px;
     border-right: none;
 }
 
 .status-badge {
     position: relative;
     z-index: 2;
-    padding: 6px 18px;
+    padding: 6px 16px;
     border-radius: 20px;
     font-weight: 800;
-    font-size: 0.82rem;
-    letter-spacing: 0.5px;
+    font-size: 0.8rem;
     color: var(--white);
 }
 
@@ -244,7 +216,7 @@ body {
 }
 
 .cancha-info p {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
 }
 
 .current-player {
@@ -256,31 +228,29 @@ body {
     color: var(--text-muted);
 }
 
-/* NAVEGACIÓN Y PESTAÑAS */
+/* PESTAÑAS NAVEGABLES */
 .nav-tabs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: 6px;
+    margin-bottom: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
-    width: 100%;
+    padding-bottom: 4px;
 }
 
 .tab-btn {
     background: transparent;
     border: none;
-    padding: 12px 18px;
-    font-size: 0.9rem;
+    padding: 10px 14px;
+    font-size: 0.85rem;
     font-weight: 700;
     color: var(--text-muted);
     cursor: pointer;
     border-bottom: 3px solid transparent;
     white-space: nowrap;
-    transition: all 0.2s;
     border-radius: 8px 8px 0 0;
-    flex-shrink: 0; /* Evita que Safari rompa los botones */
+    flex-shrink: 0;
 }
 
 .tab-btn.active, .tab-btn:hover {
@@ -289,36 +259,27 @@ body {
     background: rgba(59, 130, 246, 0.05);
 }
 
-.tab-content { display: none; width: 100%; }
+.tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* GRID & CARDS */
+/* LAYOUT DE GRID */
 .grid-two-columns {
     display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 24px;
-    width: 100%;
-}
-
-@media (max-width: 900px) {
-    .grid-two-columns { 
-        grid-template-columns: 100%; 
-    }
+    grid-template-columns: 360px 1fr;
+    gap: 20px;
 }
 
 .card {
     background: var(--bg-card);
     border-radius: 16px;
-    padding: 24px;
+    padding: 20px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: var(--shadow);
     width: 100%;
-    min-width: 0; /* Corrección flex/grid en iOS */
-    box-sizing: border-box;
 }
 
 .card-title h3 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     color: var(--text-dark);
     font-weight: 800;
 }
@@ -332,17 +293,15 @@ body {
     margin-bottom: 16px;
 }
 
-/* SELECTOR DE CANCHAS EN CUADRADITOS (5 / 5 / 7) */
+/* SELECTOR CANCHAS */
 .canchas-selector-container {
     display: flex;
     gap: 8px;
     margin-top: 8px;
-    width: 100%;
 }
 
 .cancha-btn {
     flex: 1;
-    min-width: 0;
     cursor: pointer;
 }
 
@@ -351,78 +310,62 @@ body {
 .cancha-box {
     background: #0F172A;
     border: 2px solid #1E293B;
-    border-radius: 12px;
-    padding: 10px 4px;
+    border-radius: 10px;
+    padding: 8px 4px;
     text-align: center;
-    transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
 }
 
 .cancha-btn input[type="radio"]:checked + .cancha-box {
     border-color: var(--blue-accent);
     background: rgba(59, 130, 246, 0.15);
-    box-shadow: 0 0 12px var(--blue-glow);
 }
 
 .cancha-num {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 800;
     color: var(--white);
 }
 
 .cancha-tipo {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     font-weight: 700;
 }
 
-/* FORMULARIOS Y CONTROLES */
+/* FORMULARIOS */
 .form-group {
-    margin-bottom: 16px;
-    width: 100%;
+    margin-bottom: 14px;
 }
 
 .form-group label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-muted);
     margin-bottom: 6px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .form-control {
     width: 100%;
-    padding: 12px 14px;
+    padding: 10px 12px;
     background-color: #0F172A;
     color: var(--white);
     border: 1px solid #1E293B;
-    border-radius: 10px;
-    font-size: 0.95rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
     outline: none;
-    transition: all 0.2s;
-    box-sizing: border-box;
-    -webkit-appearance: none; /* Elimina estilos por defecto de iOS */
-}
-
-.form-control:focus {
-    border-color: var(--blue-accent);
-    box-shadow: 0 0 10px var(--blue-glow);
+    -webkit-appearance: none;
 }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    width: 100%;
+    gap: 10px;
 }
-
-.date-small { width: auto; padding: 6px 12px; }
-.search-input { width: 240px; }
 
 /* SWITCH TURNO FIJO */
 .checkbox-card {
@@ -430,21 +373,21 @@ body {
     align-items: center;
     gap: 12px;
     background: #0F172A;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 8px;
     border: 1px solid #1E293B;
 }
 
 .help-text {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--text-muted);
 }
 
 .switch-container {
     position: relative;
     display: inline-block;
-    width: 44px;
-    height: 24px;
+    width: 40px;
+    height: 22px;
     flex-shrink: 0;
 }
 
@@ -455,185 +398,128 @@ body {
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
     background-color: #334155;
-    transition: .3s;
-    border-radius: 24px;
+    border-radius: 20px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 18px;
-    width: 18px;
+    height: 16px;
+    width: 16px;
     left: 3px;
     bottom: 3px;
     background-color: white;
-    transition: .3s;
     border-radius: 50%;
 }
 
 input:checked + .slider { background-color: var(--blue-accent); }
-input:checked + .slider:before { transform: translateX(20px); }
+input:checked + .slider:before { transform: translateX(18px); }
 
 /* BOTONES */
 .btn {
-    padding: 12px 20px;
-    border-radius: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
     border: none;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
-.btn:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.1);
-}
+.btn-primary { background-color: var(--blue-accent); color: var(--white); }
+.btn-success { background-color: var(--green-neon); color: #064E3B; }
+.btn-warning { background-color: #F59E0B; color: #451A03; }
+.btn-danger { background-color: var(--red-occupied); color: var(--white); }
 
-.btn-primary {
-    background-color: var(--blue-accent);
-    color: var(--white);
-    box-shadow: 0 4px 12px var(--blue-glow);
-}
+.btn-sm { padding: 5px 10px; font-size: 0.75rem; border-radius: 6px; }
+.full-width { width: 100%; margin-top: 8px; }
 
-.btn-success {
-    background-color: var(--green-neon);
-    color: #064E3B;
-    box-shadow: 0 4px 12px var(--green-neon-glow);
-}
+/* ESTRUCTURA DE TABLA BASE (Escritorio) */
+.table-responsive { width: 100%; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.table th { background-color: #0F172A; color: var(--text-muted); font-weight: 700; padding: 10px; text-transform: uppercase; font-size: 0.7rem; text-align: left; }
+.table td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: middle; }
 
-.btn-warning {
-    background-color: #F59E0B;
-    color: #451A03;
-}
-
-.btn-danger {
-    background-color: var(--red-occupied);
-    color: var(--white);
-}
-
-.btn-sm {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    border-radius: 6px;
-}
-
-.full-width {
-    width: 100%;
-    margin-top: 10px;
-}
-
-/* TABLAS RESPONSIVAS FIX PARA iOS */
-.table-responsive { 
-    width: 100%;
-    overflow-x: auto; 
-    -webkit-overflow-scrolling: touch;
-    display: block;
-    margin-top: 8px;
-}
-
-.table {
-    width: 100%;
-    min-width: 500px; /* Asegura scroll interno en la tabla sin romper la pantalla */
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 0.85rem;
-}
-
-.table th {
-    background-color: #0F172A;
-    color: var(--text-muted);
-    font-weight: 700;
-    padding: 10px 8px;
-    border-bottom: 2px solid #1E293B;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-}
-
-.table td {
-    padding: 10px 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-.badge-tag {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    display: inline-block;
-}
-
+.badge-tag { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; display: inline-block; }
 .tag-fijo { background: rgba(192, 132, 252, 0.15); color: #C084FC; border: 1px solid rgba(192, 132, 252, 0.3); }
 .tag-espontaneo { background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.3); }
 .tag-pagado { background: rgba(52, 211, 153, 0.15); color: #34D399; border: 1px solid rgba(52, 211, 153, 0.3); }
 .tag-pendiente { background: rgba(248, 113, 113, 0.15); color: #F87171; border: 1px solid rgba(248, 113, 113, 0.3); }
 
 /* CAJA INFO */
-.caja-info-box {
-    background: #0F172A;
-    padding: 16px;
-    border-radius: 12px;
-    border: 1px solid #1E293B;
-    width: 100%;
-}
-
+.caja-info-box { background: #0F172A; padding: 14px; border-radius: 10px; border: 1px solid #1E293B; }
 .caja-info-box ul { list-style: none; }
-
-.caja-info-box li {
-    padding: 10px 0;
-    border-bottom: 1px dashed #1E293B;
-    font-size: 0.9rem;
-    display: flex;
-    justify-content: space-between;
-}
-
+.caja-info-box li { padding: 8px 0; border-bottom: 1px dashed #1E293B; font-size: 0.85rem; display: flex; justify-content: space-between; }
 .mt-20 { margin-top: 20px; }
 
-/* FOOTER */
-.footer {
-    text-align: center;
-    margin-top: 40px;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
+.footer { text-align: center; margin-top: 30px; color: var(--text-muted); font-size: 0.8rem; }
 
-/* MEDIA QUERIES ESPECÍFICAS PARA MÓVILES (iOS / Android) */
-@media (max-width: 768px) {
-    .container {
-        padding: 0 12px;
+/* ========================================================= */
+/* ADAPTACIÓN MÓVIL AUTOMÁTICA (MANTIONAL RESPONSIVE) */
+/* ========================================================= */
+@media (max-width: 850px) {
+    .grid-two-columns {
+        grid-template-columns: 1fr;
     }
-
-    .card {
-        padding: 16px;
-    }
-
-    .navbar {
-        padding: 10px 14px;
-    }
-
-    .navbar-logo-img {
-        height: 36px;
-    }
-
+    
     .form-row {
-        grid-template-columns: 1fr; /* Pasa de 2 columnas a 1 vertical */
-        gap: 10px;
+        grid-template-columns: 1fr;
     }
 
     .search-input, .date-small {
         width: 100% !important;
     }
 
-    .flex-between {
-        flex-direction: column;
-        align-items: flex-start;
+    /* TRASFORMACIÓN DE TABLAS A TARJETAS VERTICALES */
+    .table-responsive {
+        border: none;
+    }
+
+    .table, .table thead, .table tbody, .table th, .table td, .table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .table thead {
+        display: none; /* Oculta los encabezados superiores en pantallas chicas */
+    }
+
+    .table tr {
+        background: #0F172A;
+        border: 1px solid #1E293B;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        padding: 10px 14px;
+    }
+
+    .table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        text-align: right;
+        white-space: normal;
+    }
+
+    .table td:last-child {
+        border-bottom: none;
+        justify-content: flex-end;
+        gap: 8px;
+        padding-top: 10px;
+    }
+
+    /* Agrega etiquetas dinámicas según las columnas de tus tablas */
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        text-align: left;
+        padding-right: 10px;
     }
 }
