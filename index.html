@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estación Fu7bol - Panel de Gestión</title>
+
+    <!-- FAVICON & TIPOGRAFÍA MODERNIZADA -->
+    <link rel="icon" type="image/x-icon" href="recursos/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="recursos/logo.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDK v9 (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+
+    <!-- NAVBAR Y LOGO OFICIAL -->
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="recursos/logo.png" alt="Estación Fu7bol" class="navbar-logo-img">
+        </div>
+        <div class="status-indicator">
+            <span class="dot-online"></span>
+            <span>Sistema Operativo</span>
+        </div>
+    </header>
+
+    <div class="main-layout container">
+        
+        <!-- ESTADO DE CANCHAS EN TIEMPO REAL -->
+        <section class="section-canchas">
+            <div class="section-header">
+                <h2>Canchas en Tiempo Real</h2>
+                <span class="sub-text">Cancha 1 y 2 (F5) | Cancha 3 (F7)</span>
+            </div>
+            
+            <div class="canchas-grid">
+                <!-- Cancha 1 -->
+                <div class="cancha-card f5" id="card-cancha-1">
+                    <div class="cancha-header">
+                        <h3>Cancha 1</h3>
+                        <span class="badge-type">Fútbol 5</span>
+                    </div>
+                    <div class="field-diagram">
+                        <div class="field-line center-circle"></div>
+                        <div class="field-line penalty-area-left"></div>
+                        <div class="field-line penalty-area-right"></div>
+                        <div class="status-badge libre" id="badge-cancha-1">LIBRE</div>
+                    </div>
+                    <div class="cancha-info" id="info-cancha-1">
+                        <p class="current-player">Sin turno activo</p>
+                        <p class="current-time">Disponible</p>
+                    </div>
+                </div>
+
+                <!-- Cancha 2 -->
+                <div class="cancha-card f5" id="card-cancha-2">
+                    <div class="cancha-header">
+                        <h3>Cancha 2</h3>
+                        <span class="badge-type">Fútbol 5</span>
+                    </div>
+                    <div class="field-diagram">
+                        <div class="field-line center-circle"></div>
+                        <div class="field-line penalty-area-left"></div>
+                        <div class="field-line penalty-area-right"></div>
+                        <div class="status-badge libre" id="badge-cancha-2">LIBRE</div>
+                    </div>
+                    <div class="cancha-info" id="info-cancha-2">
+                        <p class="current-player">Sin turno activo</p>
+                        <p class="current-time">Disponible</p>
+                    </div>
+                </div>
+
+                <!-- Cancha 3 -->
+                <div class="cancha-card f7" id="card-cancha-3">
+                    <div class="cancha-header">
+                        <h3>Cancha 3</h3>
+                        <span class="badge-type f7-badge">Fútbol 7</span>
+                    </div>
+                    <div class="field-diagram f7-field">
+                        <div class="field-line center-circle"></div>
+                        <div class="field-line penalty-area-left"></div>
+                        <div class="field-line penalty-area-right"></div>
+                        <div class="status-badge libre" id="badge-cancha-3">LIBRE</div>
+                    </div>
+                    <div class="cancha-info" id="info-cancha-3">
+                        <p class="current-player">Sin turno activo</p>
+                        <p class="current-time">Disponible</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑAS DE NAVEGACIÓN REORDENADAS -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('turnos')">📋 Cargar & Control Turnos</button>
+            <button class="tab-btn" onclick="switchTab('caja')">💰 Caja</button>
+            <button class="tab-btn" onclick="switchTab('fijos')">📌 Turnos Fijos</button>
+        </nav>
+
+        <!-- SECCIÓN 1: TURNOS -->
+        <div id="tab-turnos" class="tab-content active">
+            <div class="grid-two-columns">
+                
+                <!-- Formulario Carga Turno -->
+                <div class="card shadow">
+                    <div class="card-title">
+                        <h3>➕ Nuevo Turno</h3>
+                    </div>
+                    <form id="form-turno">
+                        <div class="form-group">
+                            <label>Seleccionar Cancha:</label>
+                            <div class="canchas-selector-container">
+                                <label class="cancha-btn">
+                                    <input type="radio" name="cancha-radio" value="1" checked onchange="actualizarMontoSegunCancha()">
+                                    <div class="cancha-box">
+                                        <span class="cancha-num">F5</span>
+                                        <span class="cancha-tipo">Cancha 1</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="cancha-btn">
+                                    <input type="radio" name="cancha-radio" value="2" onchange="actualizarMontoSegunCancha()">
+                                    <div class="cancha-box">
+                                        <span class="cancha-num">F5</span>
+                                        <span class="cancha-tipo">Cancha 2</span>
+                                    </div>
+                                </label>
+
+                                <label class="cancha-btn">
+                                    <input type="radio" name="cancha-radio" value="3" onchange="actualizarMontoSegunCancha()">
+                                    <div class="cancha-box">
+                                        <span class="cancha-num">F7</span>
+                                        <span class="cancha-tipo">Cancha 3</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fecha-turno">Fecha:</label>
+                                <input type="date" id="fecha-turno" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hora-turno">Hora del Turno:</label>
+                                <input type="time" id="hora-turno" class="form-control" step="3600" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cliente-nombre">Jugador / Responsable:</label>
+                            <input type="text" id="cliente-nombre" class="form-control" placeholder="Ej: Lucas González" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cliente-tel">Teléfono de Contacto:</label>
+                            <input type="tel" id="cliente-tel" class="form-control" placeholder="Ej: 1123456789" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="sena-monto">Seña ($):</label>
+                                <input type="number" id="sena-monto" class="form-control" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="total-monto">Monto Total ($):</label>
+                                <input type="number" id="total-monto" class="form-control" placeholder="Ej: 35000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox-card">
+                            <label class="switch-container">
+                                <input type="checkbox" id="turno-fijo">
+                                <span class="slider"></span>
+                            </label>
+                            <div>
+                                <strong>Turno Fijo Semanal</strong>
+                                <p class="help-text">Se repite el mismo día y hora todas las semanas</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary full-width">📌 Registrar Reserva</button>
+                    </form>
+                </div>
+
+                <!-- Agenda de Turnos del Día -->
+                <div class="card shadow">
+                    <div class="card-title flex-between">
+                        <h3>📅 Agenda de Turnos</h3>
+                        <input type="date" id="filtro-fecha" class="form-control date-small">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Cancha</th>
+                                    <th>Cliente</th>
+                                    <th>Seña/Total</th>
+                                    <th>Tipo</th>
+                                    <th>Estado / Pago</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-turnos-body">
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">Cargando turnos desde Firebase...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: CAJA -->
+        <div id="tab-caja" class="tab-content">
+            <div class="grid-two-columns">
+                <!-- Apertura y Registro de Retiros -->
+                <div class="card shadow">
+                    <div class="card-title">
+                        <h3>💵 Movimientos de Caja Diaria</h3>
+                    </div>
+                    
+                    <!-- Apertura -->
+                    <div class="form-group">
+                        <label>Monto de Apertura / Cambio Inicial ($):</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="monto-apertura" class="form-control" placeholder="Ej: 15000">
+                            <button type="button" id="btn-guardar-caja-inicial" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: var(--border-color); margin: 16px 0;">
+
+                    <!-- Retiros -->
+                    <form id="form-retiro-caja">
+                        <div class="card-title">
+                            <h3>💸 Registrar Retiro de Caja</h3>
+                        </div>
+                        <div class="form-group">
+                            <label>Concepto / Motivo:</label>
+                            <input type="text" id="retiro-concepto" class="form-control" placeholder="Ej: Pago de luz / Retiro de ganancias" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Monto a Retirar ($):</label>
+                            <input type="number" id="retiro-monto" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <button type="submit" class="btn btn-danger full-width">Registrar Retiro</button>
+                    </form>
+                </div>
+
+                <!-- Balance Final en Mano -->
+                <div class="card shadow">
+                    <div class="card-title flex-between">
+                        <h3>📊 Resumen de Caja Física (Hoy)</h3>
+                        <input type="month" id="filtro-mes" class="form-control date-small">
+                    </div>
+                    <div class="caja-info-box">
+                        <ul>
+                            <li><span>(+) Cambio Inicial:</span> <strong id="stat-caja-inicial">$0</strong></li>
+                            <li><span>(+) Cobrado por Turnos Hoy:</span> <strong id="stat-caja-dia">$0</strong></li>
+                            <li><span>(-) Retiros Realizados:</span> <strong id="stat-caja-retiros" style="color:var(--red-occupied);">$0</strong></li>
+                            <li style="font-size: 1.1rem; font-weight: bold; margin-top: 10px; border-top: 2px solid var(--border-color); padding-top: 10px;">
+                                <span>(=) EFECTIVO EN CAJA:</span> <strong id="stat-caja-efectivo" style="color:var(--green-neon);">$0</strong>
+                            </li>
+                            <li style="margin-top: 15px; background: rgba(59, 130, 246, 0.1); padding: 8px 12px; border-radius: 8px;">
+                                <span>Recaudación Mes:</span> <strong id="stat-caja-mes" style="color:var(--blue-accent);">$0</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: TURNOS FIJOS -->
+        <div id="tab-fijos" class="tab-content">
+            <div class="card shadow">
+                <div class="card-title flex-between">
+                    <h3>📌 Panel de Control de Turnos Fijos</h3>
+                    <span class="sub-text">Gestión de reservas recurrentes que juegan todas las semanas</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Día y Hora</th>
+                                <th>Cancha</th>
+                                <th>Responsable</th>
+                                <th>Teléfono</th>
+                                <th>Monto Acordado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-fijos-body">
+                            <tr>
+                                <td colspan="6" class="text-center py-4">Cargando turnos fijos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p><strong>Estación Fu7bol</strong> &copy; 2026 - Panel de Control Responsive</p>
+        <p><small>La Familia Más</small></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
